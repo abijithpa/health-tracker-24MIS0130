@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  # Version 1 - Enter Data (Input health values)
+  health-tracker-v1:
+    build:
+      context: ./versions/v1
+      dockerfile: Dockerfile
+    image: 24mis0130/health-tracker:v1
+    container_name: health-tracker-v1
+    restart: unless-stopped
+    ports:
+      - "8081:3000"
+    environment:
+      - PORT=3000
+      - APP_VERSION=v1
+
+  # Version 2 - View (Display records)
+  health-tracker-v2:
+    build:
+      context: ./versions/v2
+      dockerfile: Dockerfile
+    image: 24mis0130/health-tracker:v2
+    container_name: health-tracker-v2
+    restart: unless-stopped
+    ports:
+      - "8082:3000"
+    environment:
+      - PORT=3000
+      - APP_VERSION=v2
+    depends_on:
+      - health-tracker-v1
+
+  # Version 3 - Chart (Show simple graph)
+  health-tracker-v3:
+    build:
+      context: ./versions/v3
+      dockerfile: Dockerfile
+    image: 24mis0130/health-tracker:v3
+    container_name: health-tracker-v3
+    restart: unless-stopped
+    ports:
+      - "8083:3000"
+    environment:
+      - PORT=3000
+      - APP_VERSION=v3
+    depends_on:
+      - health-tracker-v2
